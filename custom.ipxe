@@ -10,7 +10,7 @@ item --gap This is the first sub menu
 item option_one ${space} exodia home (ISO)
 item --gap This is a second sub menu
 item option_three ${space} Loads another custom sub menu
-item option_four ${space} GParted Live (HTTP)
+
 choose custom_choice || goto custom_exit
 echo ${cls}
 goto ${custom_choice}
@@ -19,8 +19,11 @@ goto custom_exit
 :option_one
 kernel https://boot.netboot.xyz/memdisk iso raw
 initrd http://192.168.6.101:8081/exodia-home-2024.02.21-x86_64.iso
-boot
-
 boot || goto custom_exit
+
+:option_three
+echo Chains into another menu...
+chain https://raw.githubusercontent.com/${github_user}/netboot.xyz-custom/master/custom1.ipxe || goto custom
+
 :custom_exit
 exit 0
