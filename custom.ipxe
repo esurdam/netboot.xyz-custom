@@ -8,6 +8,7 @@ clear custom_choice
 menu This is a Test Menu
 item --gap This is the first sub menu
 item option_one ${space} exodia home (ISO)
+item ubuntu_server ${space} Live Ubuntu Server 22.04 (ISO)
 item --gap This is a second sub menu
 item option_three ${space} Loads another custom sub menu
 
@@ -19,6 +20,16 @@ goto custom_exit
 :option_one
 kernel https://boot.netboot.xyz/memdisk iso raw
 initrd http://192.168.6.101:8081/exodia-home-2024.02.21-x86_64.iso
+boot || goto custom_exit
+
+:ubuntu_server
+imgfree
+set kernel_url ${live_endpoint}/ubuntu-squash/releases/download/22.04.3-7e94379b/
+set ubuntu_iso_url ${live_endpoint}/ubuntu-22.04.3-live-server-amd64.iso
+set netboot_params ip=dhcp url=${ubuntu_iso_url}
+echo Loading Ubuntu Subiquity Network Installer...
+kernel ${kernel_url}vmlinuz root=/dev/ram0 ramdisk_size=2100000 ${netboot_params} initrd=initrd.magic ${cmdline}
+initrd ${kernel_url}initrd
 boot || goto custom_exit
 
 :option_three
